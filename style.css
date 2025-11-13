@@ -158,14 +158,20 @@ canvas#wheel {
 .pointer {
   position: absolute;
   left: 50%;
-  top: -8px;
+  top: -6px;
   transform: translateX(-50%);
   width: 0;
   height: 0;
+
+  /* 🔻 Triángulo apuntando hacia abajo */
   border-left: 18px solid transparent;
   border-right: 18px solid transparent;
-  border-bottom: 30px solid var(--accent1);
-  z-index: 40;
+  border-top: 32px solid var(--accent1);
+
+  /* 🚫 No bloquea nada encima */
+  pointer-events: none;
+
+  z-index: 5; /* suficiente para verse sin tapar UI */
 }
 
 /* ==========================================================
