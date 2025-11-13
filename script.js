@@ -41,10 +41,6 @@ const btnDare = $("btnDare");
 const modalPrompt = $("modalPrompt");
 const promptTitle = $("promptTitle");
 const promptContent = $("promptContent");
-const promptSeconds = $("promptSeconds");
-const startPromptTimer = $("startPromptTimer");
-const stopPrompt = $("stopPrompt");
-const promptTimerBar = $("promptTimerBar");
 
 // Estado y persistencia
 let players = JSON.parse(localStorage.getItem("vo_players")) || [];
@@ -421,23 +417,4 @@ btnDare.addEventListener("click", () => {
   showModal(modalPrompt, btnDare);
 });
 
-// Temporizador del modal
-let timerTween = null;
-startPromptTimer.addEventListener("click", () => {
-  const sec = Math.max(5, Math.min(300, parseInt(promptSeconds.value) || 30));
-  promptTimerBar.style.width = "100%";
-  gsap.to(promptTimerBar, {
-    width: 0,
-    duration: sec,
-    ease: "linear",
-    onComplete: () => {
-      alert("⏰ ¡Tiempo terminado!");
-      promptTimerBar.style.width = "0";
-    },
-  });
-});
-stopPrompt.addEventListener("click", () => {
-  gsap.killTweensOf(promptTimerBar);
-  promptTimerBar.style.width = "0";
-  hideAllModals();
-});
+$("closePrompt").addEventListener("click", hideAllModals);
