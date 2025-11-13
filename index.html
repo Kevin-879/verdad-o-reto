@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Verdad o Reto — Ruleta</title>
+
+    <!-- ✅ Corrige la ruta del CSS -->
+    <link rel="stylesheet" href="style.css" />
+
+    <!-- Animaciones GSAP -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  </head>
+  <body>
+    <header class="topbar">
+      <button
+        id="btnMenu"
+        class="btn ghost"
+        aria-expanded="false"
+        aria-controls="menuOpciones"
+      >
+        ☰ Menú
+      </button>
+      <div
+        id="menuOpciones"
+        class="dropdown hidden"
+        role="menu"
+        aria-hidden="true"
+      >
+        <button id="btnAgregarJugador" class="menuItem" role="menuitem">
+          Agregar jugador
+        </button>
+        <button id="btnAgregarVR" class="menuItem" role="menuitem">
+          Agregar V/R
+        </button>
+      </div>
+      <h1 class="title">Verdad o Reto</h1>
+    </header>
+
+    <main class="main">
+      <section class="wheelArea">
+        <div class="wheelWrap">
+          <div class="pointer" aria-hidden="true"></div>
+          <canvas id="wheel"></canvas>
+          <button id="spinBtn" class="btn primary">Girar</button>
+        </div>
+
+        <div id="selectedCard" class="selectedCard hidden" aria-hidden="true">
+          <div id="selectedName" class="playerName">—</div>
+          <div id="selectedMeta" class="meta muted"></div>
+          <div id="vrButtons" class="actionButtons hidden" aria-hidden="true">
+            <button id="btnTruth" class="btn outline">Verdad</button>
+            <button id="btnDare" class="btn primary">Reto</button>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      Consejo: mantén los retos seguros y respetuosos.
+    </footer>
+
+    <!-- Modales -->
+    <div
+      id="modalAddPlayer"
+      class="modalBackdrop hidden"
+      tabindex="-1"
+      role="dialog"
+      aria-modal="true"
+    >
+      <div class="modalContent" role="document">
+        <h3>Agregar jugador</h3>
+
+        <label for="p_name">Nombre</label>
+        <input id="p_name" type="text" placeholder="Nombre" />
+
+        <label for="p_gender">Género</label>
+        <select id="p_gender" aria-label="Género">
+          <option value="">Seleccione</option>
+          <option>Hombre</option>
+          <option>Mujer</option>
+        </select>
+
+        <label for="p_pairing">Emparejamiento</label>
+        <select id="p_pairing" aria-label="Emparejamiento">
+          <option value="">Seleccione</option>
+          <option>Hombre</option>
+          <option>Mujer</option>
+          <option>Hombre y Mujer</option>
+        </select>
+
+        <!-- ✅ NUEVA LISTA DE JUGADORES -->
+        <h3>Jugadores registrados</h3>
+        <div id="playerList" class="bankList"></div>
+
+        <div class="modalActions">
+          <button id="clearPlayerFields" class="btn ghost">Limpiar</button>
+          <button id="addPlayerBtn" class="btn primary">Agregar jugador</button>
+          <button id="closeAddPlayer" class="btn ghost">Cerrar</button>
+        </div>
+      </div>
+    </div>
+
+    <div
+      id="modalBanks"
+      class="modalBackdrop hidden"
+      tabindex="-1"
+      role="dialog"
+      aria-modal="true"
+    >
+      <div class="modalContent modalWide" role="document">
+        <h3>Verdades y Retos</h3>
+
+        <div class="grid2">
+          <div>
+            <label for="truthText">Agregar Verdad</label>
+            <textarea
+              id="truthText"
+              placeholder="Escribe una verdad"
+            ></textarea>
+            <div class="rowRight">
+              <button id="resetTruths" class="btn ghost">Restablecer</button>
+              <button id="addTruthBtn" class="btn primary">
+                Agregar Verdad
+              </button>
+            </div>
+          </div>
+
+          <div>
+            <label for="dareText">Agregar Reto</label>
+            <textarea id="dareText" placeholder="Escribe un reto"></textarea>
+            <label for="dareCategory">Categoría del Reto</label>
+            <select id="dareCategory">
+              <option value="">Seleccione</option>
+              <option>Hombre</option>
+              <option>Mujer</option>
+              <option>Hombre y Mujer</option>
+            </select>
+            <div class="rowRight">
+              <button id="resetDares" class="btn ghost">Restablecer</button>
+              <button id="addDareBtn" class="btn primary">Agregar Reto</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="banks">
+          <div>
+            <label>Banco de Verdades</label>
+            <div id="listTruths" class="bankList" aria-live="polite"></div>
+          </div>
+          <div>
+            <label>Banco de Retos</label>
+            <div id="listDares" class="bankList" aria-live="polite"></div>
+          </div>
+        </div>
+
+        <div class="modalActions">
+          <button id="closeBanks" class="btn ghost">Cerrar</button>
+        </div>
+      </div>
+    </div>
+
+    <div
+      id="modalPrompt"
+      class="modalBackdrop hidden"
+      tabindex="-1"
+      role="dialog"
+      aria-modal="true"
+    >
+      <div class="modalContent" role="document">
+        <h3 id="promptTitle">Verdad</h3>
+        <div class="promptBox">
+          <div id="promptContent" class="promptText">—</div>
+          <label for="promptSeconds">Segundos</label>
+          <input
+            id="promptSeconds"
+            type="number"
+            min="5"
+            max="300"
+            value="30"
+          />
+          <div class="timerBar"><i id="promptTimerBar"></i></div>
+          <div class="rowRight">
+            <button id="stopPrompt" class="btn ghost">Cancelar</button>
+            <button id="startPromptTimer" class="btn primary">
+              Iniciar temporizador
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
