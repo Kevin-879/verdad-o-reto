@@ -113,11 +113,17 @@ function hideAllModals() {
     m.classList.add("hidden");
     m.setAttribute("aria-hidden", "true");
   });
+
+  wheel.classList.remove("freezeCanvas"); // ⭐ AGREGAR AQUÍ
+
   if (lastTrigger) lastTrigger.focus();
 }
 
 function showModal(modal, trigger) {
   hideAllModals();
+
+  wheel.classList.add("freezeCanvas"); // ⭐ AGREGAR AQUÍ
+
   lastTrigger = trigger || null;
   modal.classList.remove("hidden");
   modal.setAttribute("aria-hidden", "false");

@@ -171,7 +171,7 @@ canvas#wheel {
   /* 🚫 No bloquea nada encima */
   pointer-events: none;
 
-  z-index: 5; /* suficiente para verse sin tapar UI */
+  z-index: 10; /* suficiente para verse sin tapar UI */
 }
 
 /* ==========================================================
@@ -214,7 +214,7 @@ canvas#wheel {
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 120;
+  z-index: 9999;
 
   opacity: 0;
   visibility: hidden;
@@ -427,4 +427,15 @@ select option {
   text-align: center;
   padding: 14px;
   color: var(--muted);
+}
+
+/* Evita que la ruleta se deforme cuando se abren modales en móviles */
+.freezeCanvas {
+  position: fixed !important;
+  width: inherit !important;
+  height: inherit !important;
+  top: auto !important;
+  left: auto !important;
+  pointer-events: none !important;
+  touch-action: none !important;
 }
